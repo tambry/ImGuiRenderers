@@ -13,7 +13,7 @@
 #endif
 
 // Vulkan and imgui headers
-#include "vulkan.h"
+#include "vulkan/vulkan.h"
 #include "imgui.h"
 
 // Size definitions

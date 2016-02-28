@@ -2,6 +2,15 @@
 
 ImGuiVulkanRenderer::~ImGuiVulkanRenderer()
 {
+	// Must wait to make sure that the objects can be safely destroyed
+	VkResult result;
+
+	if ((result = vkDeviceWaitIdle(device)) != VK_SUCCESS)
+	{
+		log(ERROR, "Failed to wait for the device to become idle. (%d)", result);
+		return;
+	}
+
 	// We need to check if these objects exist, or else we'll crash
 	if (font_sampler)
 	{
@@ -300,6 +309,8 @@ void ImGuiVulkanRenderer::new_frame()
 #else
 	// TODO: Unix implementation
 #endif
+
+	// TODO: Delta time calculation
 
 	// The swapchain needs to be recreated, when the window is resized or else bad things happen
 	if (io.DisplaySize.x != width || io.DisplaySize.y != height)
