@@ -1,5 +1,5 @@
 # ImGuiVulkanRenderer
-A self-contained, object based, lightweight Vulkan renderer for ImGui.
+A self-contained, object-oriented, lightweight Vulkan renderer for ImGui.
 
 ## Compilation
 The project can be added to your existing solution by adding the ImGuiVulkanRenderer.vcxproj.
@@ -9,7 +9,8 @@ You will need to place the ImGuiVulkanRenderer.props properties file one directo
 Upon compilation, the project will generate a static library named ImGuiVulkanRenderer in the root directory, which you'll need to link against.
 
 ## Usage
-The renderer is used through creating an object of the renderer. The user will need to provide a pointer to the window handle and instance.
+The renderer is used through creating an object of the renderer. The user will need to provide an options structure, that contains some basic info.  
+Handling of input is left up to the user.
 
 ```c++
 #include "ImGuiVulkanRenderer.h"
@@ -55,8 +56,23 @@ int main()
 }
 ```
 
+The default logger can be replaced by defining _REPLACE_LOGGER_ before including the header. A function named log will have to be made with the following definition along with the log level enumerator:
+
+```c++
+// Log level enumerator
+enum LogLevel : unsigned char
+{
+	ERROR,
+	INFO,
+	WARNING,
+	DEBUG,
+	NONE,
+};
+
+// Log function definition
+void log(LogLevel level, const std::string format, ...);
+```
+
 ## Todo
-* Unix support
-  * Support other platform-specific surface extensions
-* Improved perfomance
-  * Prevent recreation of resources every frame, reuse resources
+* Linux support (#2)
+* Improved perfomance (#1)

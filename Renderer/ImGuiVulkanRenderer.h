@@ -34,11 +34,12 @@ using u8  = uint8_t;
 // Stores the options for the renderer, which are passed during initialization.
 struct ImGuiVulkanOptions
 {
-	VkClearValue clear_value;
-	bool validation_layers;
-	u8 device_number;
-	std::string vertex_shader;
-	std::string fragment_shader;
+	VkClearValue clear_value;     // Colour, which to clear the screen to every frame
+	u8 device_number;             // Number of the device, which to use for rendering
+	bool validation_layers;       // Whether to enable Vulkan validation layers or not
+	//bool use_precompiled_shaders; // Whether to use precompiled shaders or not (TODO)
+	std::string vertex_shader;    // Vertex shader path.   Default path: "../shaders/imgui.vert.spv"
+	std::string fragment_shader;  // Fragment shader path. Default path: "../shaders/imgui.frag.spv"
 };
 
 class ImGuiVulkanRenderer
@@ -110,4 +111,6 @@ private:
 	void* window_instance;
 	std::string vertex_shader_path = "../shaders/imgui.vert.spv";
 	std::string fragment_shader_path = "../shaders/imgui.frag.spv";
+	s64 ticks_per_second;
+	s64 time;
 };

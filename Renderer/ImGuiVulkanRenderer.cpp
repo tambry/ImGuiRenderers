@@ -293,7 +293,7 @@ void ImGuiVulkanRenderer::new_frame()
 	float width = 0;
 	float height = 0;
 
-	// Get the window width/height depending on the platform
+	// Get the window width/height depending on the platform and calculate the delta time
 #ifdef _WIN32
 	HWND handle = static_cast<HWND>(window_handle);
 	RECT coordinates;
@@ -306,11 +306,14 @@ void ImGuiVulkanRenderer::new_frame()
 
 	width = static_cast<float>(coordinates.right - coordinates.left);
 	height = static_cast<float>(coordinates.bottom - coordinates.top);
+
+	s64 current_time;
+	QueryPerformanceCounter((LARGE_INTEGER*)&current_time);
+	io.DeltaTime = (float)(current_time - time) / ticks_per_second;
+	time = current_time;
 #else
 	// TODO: Unix implementation
 #endif
-
-	// TODO: Delta time calculation
 
 	// The swapchain needs to be recreated, when the window is resized or else bad things happen
 	if (io.DisplaySize.x != width || io.DisplaySize.y != height)
@@ -1311,6 +1314,11 @@ bool ImGuiVulkanRenderer::initialize(void* handle, void* instance, ImGuiVulkanOp
 		log(ERROR, "Failed to initialize Vulkan renderer.");
 		return false;
 	}
+
+#ifdef _WIN32
+	QueryPerformanceFrequency((LARGE_INTEGER*)&ticks_per_second);
+	QueryPerformanceCounter((LARGE_INTEGER*)&time);
+#endif
 
 	return true;
 }
