@@ -307,10 +307,19 @@ void ImGuiVulkanRenderer::new_frame()
 	width = static_cast<float>(coordinates.right - coordinates.left);
 	height = static_cast<float>(coordinates.bottom - coordinates.top);
 
+	// Delta time calculation
 	s64 current_time;
 	QueryPerformanceCounter((LARGE_INTEGER*)&current_time);
 	io.DeltaTime = (float)(current_time - time) / ticks_per_second;
 	time = current_time;
+
+	// Set the keyboard modifiers
+	io.KeyCtrl = (GetKeyState(VK_CONTROL) & 0x8000) != 0;
+	io.KeyShift = (GetKeyState(VK_SHIFT) & 0x8000) != 0;
+	io.KeyAlt = (GetKeyState(VK_MENU) & 0x8000) != 0;
+
+	// Whether the cursor is being drawn in software
+	SetCursor(io.MouseDrawCursor ? nullptr : LoadCursor(nullptr, IDC_ARROW));
 #else
 	// TODO: Unix implementation
 #endif
