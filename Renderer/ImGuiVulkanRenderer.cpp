@@ -344,7 +344,7 @@ void ImGuiVulkanRenderer::new_frame()
 #endif
 
 	// The swapchain needs to be recreated, when the window is resized or else bad things happen
-	if (io.DisplaySize.x != width || io.DisplaySize.y != height)
+	if ((io.DisplaySize.x != width || io.DisplaySize.y != height) && width != 0 && height != 0)
 	{
 		VkResult result;
 
