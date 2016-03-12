@@ -226,7 +226,7 @@ VkBool32 ImGuiVulkanRenderer::get_memory_type(u32 typeBits, VkFlags properties, 
 	return false;
 }
 
-VkShaderModule ImGuiVulkanRenderer::load_shader_GLSL(std::string file_name)
+VkShaderModule ImGuiVulkanRenderer::load_shader(std::string file_name)
 {
 	std::ifstream stream(file_name, std::ios::binary);
 
@@ -264,6 +264,25 @@ VkShaderModule ImGuiVulkanRenderer::load_shader_GLSL(std::string file_name)
 	}
 
 	free(shader_code);
+
+	return shader_module;
+}
+
+VkShaderModule ImGuiVulkanRenderer::load_shader(const u8* shader, u64 size)
+{
+	VkShaderModuleCreateInfo shader_module_info = {};
+	shader_module_info.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
+	shader_module_info.codeSize = size;
+	shader_module_info.pCode = (u32*)shader;
+
+	VkShaderModule shader_module;
+	VkResult result;
+
+	if ((result = vkCreateShaderModule(device, &shader_module_info, nullptr, &shader_module)) != VK_SUCCESS)
+	{
+		log(ERROR, "Failed to create a shader module. (%d)", result);
+		return nullptr;
+	}
 
 	return shader_module;
 }
@@ -1089,8 +1108,16 @@ bool ImGuiVulkanRenderer::prepare_vulkan(u8 device_num, bool validation_layers)
 	dynamic_info.pDynamicStates = dynamic_states.data();
 
 	// Shaders
-	vertex_shader = load_shader_GLSL(vertex_shader_path);
-	fragment_shader = load_shader_GLSL(fragment_shader_path);
+	if (precompiled_shaders)
+	{
+		vertex_shader = load_shader(imgui_vertex.data(), imgui_vertex.size());
+		fragment_shader = load_shader(imgui_fragment.data(), imgui_fragment.size());
+	}
+	else
+	{
+		vertex_shader = load_shader(vertex_shader_path);
+		fragment_shader = load_shader(fragment_shader_path);
+	}
 
 	VkPipelineShaderStageCreateInfo shader_info[2] = {};
 	shader_info[0].sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
@@ -1307,6 +1334,7 @@ bool ImGuiVulkanRenderer::initialize(void* handle, void* instance, ImGuiVulkanOp
 	window_handle = handle;
 	window_instance = instance;
 	clear_value = options.clear_value;
+	precompiled_shaders = options.use_precompiled_shaders;
 
 	if (!options.vertex_shader.empty())
 	{
