@@ -5,98 +5,98 @@ ImGuiVulkanRenderer::~ImGuiVulkanRenderer()
 	// Must wait to make sure that the objects can be safely destroyed
 	VkResult result;
 
-	if ((result = vkDeviceWaitIdle(device)) != VK_SUCCESS)
-	{
-		log(ERROR, "Failed to wait for the device to become idle. (%d)", result);
-		return;
-	}
-
-	// We need to check if these objects exist, or else we'll crash
-	if (font_sampler)
-	{
-		vkDestroySampler(device, font_sampler, nullptr);
-	}
-
-	if (font_memory)
-	{
-		vkFreeMemory(device, font_memory, nullptr);
-	}
-
-	if (font_image_view)
-	{
-		vkDestroyImageView(device, font_image_view, nullptr);
-	}
-
-	if (font_image)
-	{
-		vkDestroyImage(device, font_image, nullptr);
-	}
-
-	if (pipeline)
-	{
-		vkDestroyPipeline(device, pipeline, nullptr);
-	}
-
-	if (pipeline_cache)
-	{
-		vkDestroyPipelineCache(device, pipeline_cache, nullptr);
-	}
-
-	if (pipeline_layout)
-	{
-		vkDestroyPipelineLayout(device, pipeline_layout, nullptr);
-	}
-
-	if (descriptor_set_layout)
-	{
-		vkDestroyDescriptorSetLayout(device, descriptor_set_layout, nullptr);
-	}
-
-	if (descriptor_set)
-	{
-		vkFreeDescriptorSets(device, descriptor_pool, 1, &descriptor_set);
-	}
-
-	if (descriptor_pool)
-	{
-		vkDestroyDescriptorPool(device, descriptor_pool, nullptr);
-	}
-
-	if (render_pass)
-	{
-		vkDestroyRenderPass(device, render_pass, nullptr);
-	}
-
-	if (vertex_shader)
-	{
-		vkDestroyShaderModule(device, vertex_shader, nullptr);
-	}
-
-	if (fragment_shader)
-	{
-		vkDestroyShaderModule(device, fragment_shader, nullptr);
-	}
-
-	for (u8 i = 0; i < 2; i++)
-	{
-		if (swapchain_image_views[i])
-		{
-			vkDestroyImageView(device, swapchain_image_views[i], nullptr);
-		}
-	}
-
-	if (command_pool)
-	{
-		vkDestroyCommandPool(device, command_pool, nullptr);
-	}
-
-	if (swapchain)
-	{
-		vkDestroySwapchainKHR(device, swapchain, nullptr);
-	}
-
 	if (device)
 	{
+		if ((result = vkDeviceWaitIdle(device)) != VK_SUCCESS)
+		{
+			log(ERROR, "Failed to wait for the device to become idle. (%d)", result);
+			return;
+		}
+
+		// We need to check if these objects exist, or else we'll crash
+		if (font_sampler)
+		{
+			vkDestroySampler(device, font_sampler, nullptr);
+		}
+
+		if (font_memory)
+		{
+			vkFreeMemory(device, font_memory, nullptr);
+		}
+
+		if (font_image_view)
+		{
+			vkDestroyImageView(device, font_image_view, nullptr);
+		}
+
+		if (font_image)
+		{
+			vkDestroyImage(device, font_image, nullptr);
+		}
+
+		if (pipeline)
+		{
+			vkDestroyPipeline(device, pipeline, nullptr);
+		}
+
+		if (pipeline_cache)
+		{
+			vkDestroyPipelineCache(device, pipeline_cache, nullptr);
+		}
+
+		if (pipeline_layout)
+		{
+			vkDestroyPipelineLayout(device, pipeline_layout, nullptr);
+		}
+
+		if (descriptor_set_layout)
+		{
+			vkDestroyDescriptorSetLayout(device, descriptor_set_layout, nullptr);
+		}
+
+		if (descriptor_set)
+		{
+			vkFreeDescriptorSets(device, descriptor_pool, 1, &descriptor_set);
+		}
+
+		if (descriptor_pool)
+		{
+			vkDestroyDescriptorPool(device, descriptor_pool, nullptr);
+		}
+
+		if (render_pass)
+		{
+			vkDestroyRenderPass(device, render_pass, nullptr);
+		}
+
+		if (vertex_shader)
+		{
+			vkDestroyShaderModule(device, vertex_shader, nullptr);
+		}
+
+		if (fragment_shader)
+		{
+			vkDestroyShaderModule(device, fragment_shader, nullptr);
+		}
+
+		for (u8 i = 0; i < 2; i++)
+		{
+			if (swapchain_image_views[i])
+			{
+				vkDestroyImageView(device, swapchain_image_views[i], nullptr);
+			}
+		}
+
+		if (command_pool)
+		{
+			vkDestroyCommandPool(device, command_pool, nullptr);
+		}
+
+		if (swapchain)
+		{
+			vkDestroySwapchainKHR(device, swapchain, nullptr);
+		}
+
 		vkDestroyDevice(device, nullptr);
 	}
 
@@ -678,7 +678,7 @@ bool ImGuiVulkanRenderer::prepare_vulkan(u8 device_num, bool validation_layers)
 	application_info.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
 	application_info.pApplicationName = "NGEmu";
 	application_info.pEngineName = "NGEmu";
-	application_info.apiVersion = VK_MAKE_VERSION(1, 0, 3);
+	application_info.apiVersion = VK_MAKE_VERSION(1, 0, 4);
 
 	// Set Vulkan instance info and create the instance
 	VkInstanceCreateInfo instance_info = {};
