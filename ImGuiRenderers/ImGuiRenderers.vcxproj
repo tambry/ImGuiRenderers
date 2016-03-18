@@ -11,10 +11,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{D9DA9F17-01C1-4973-9959-B8A311EF2D63}</ProjectGuid>
-    <RootNamespace>ImGuiVulkanRenderer</RootNamespace>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
-    <ProjectName>Renderer</ProjectName>
+    <ProjectGuid>{68754D71-DFC6-45D4-99D4-4E6022307E3E}</ProjectGuid>
+    <RootNamespace>ImGuiRenderers</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.10240.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
@@ -37,29 +36,27 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\ImGuiVulkanRenderer.props" />
+    <Import Project="..\..\ImGuiRenderers.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\ImGuiVulkanRenderer.props" />
+    <Import Project="..\..\ImGuiRenderers.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>../</OutDir>
-    <IntDir>../build/</IntDir>
-    <TargetName>ImGuiVulkanRenderer</TargetName>
+    <OutDir>../../lib/</OutDir>
+    <IntDir>../../build_renderers/</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>../</OutDir>
-    <IntDir>../build/</IntDir>
-    <TargetName>ImGuiVulkanRenderer</TargetName>
+    <OutDir>../../lib/</OutDir>
+    <IntDir>../../build_renderers/</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <TreatWarningAsError>true</TreatWarningAsError>
+      <AdditionalIncludeDirectories>$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -69,7 +66,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <TreatWarningAsError>true</TreatWarningAsError>
+      <AdditionalIncludeDirectories>$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -77,12 +74,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="ImGuiVulkanRenderer.h" />
+    <ClInclude Include="ImGuiRenderers.h" />
     <ClInclude Include="Logger.h" />
+    <ClInclude Include="Renderers\VulkanRenderer.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ImGuiVulkanRenderer.cpp" />
     <ClCompile Include="Logger.cpp" />
+    <ClCompile Include="Renderers\VulkanRenderer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

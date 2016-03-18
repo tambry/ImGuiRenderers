@@ -1,25 +1,31 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Renderer">
+    <Filter Include="Source">
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
+    <Filter Include="Source\Renderers">
+      <UniqueIdentifier>{e6d1f120-4a3a-4eeb-9040-c1d961ce8fa0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ImGuiVulkanRenderer.h">
-      <Filter>Renderer</Filter>
+    <ClInclude Include="Renderers\VulkanRenderer.h">
+      <Filter>Source\Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGuiRenderers.h">
+      <Filter>Source</Filter>
     </ClInclude>
     <ClInclude Include="Logger.h">
-      <Filter>Renderer</Filter>
+      <Filter>Source</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ImGuiVulkanRenderer.cpp">
-      <Filter>Renderer</Filter>
+    <ClCompile Include="Renderers\VulkanRenderer.cpp">
+      <Filter>Source\Renderers</Filter>
     </ClCompile>
     <ClCompile Include="Logger.cpp">
-      <Filter>Renderer</Filter>
+      <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

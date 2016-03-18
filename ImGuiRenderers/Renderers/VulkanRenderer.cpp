@@ -1,4 +1,4 @@
-#include "ImGuiVulkanRenderer.h"
+#include "VulkanRenderer.h"
 
 ImGuiVulkanRenderer::~ImGuiVulkanRenderer()
 {

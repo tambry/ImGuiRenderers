@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ImGuiVulkanRenderer.h"
+#include "ImGuiRenderers.h"
 
 // A lightweight logger implementation from https://github.com/tambry/Common
 #include <stdarg.h>
