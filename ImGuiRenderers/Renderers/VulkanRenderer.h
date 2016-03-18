@@ -1,35 +1,15 @@
 #pragma once
 
-#include <fstream>
-#include <stdint.h>
-#include <vector>
+#include "../ImGuiRenderers.h"
 
 // Platform-specific includes and surface extension defines
 #ifdef _WIN32
-#include <windows.h>
-
-#undef ERROR
 #define VK_USE_PLATFORM_WIN32_KHR
 #endif
 
-// Vulkan and imgui headers
+// Headers
+#include <fstream>
 #include "vulkan/vulkan.h"
-#include "imgui.h"
-
-// Size definitions
-using s64 = int64_t;
-using s32 = int32_t;
-using s16 = int16_t;
-using s8  = int8_t;
-using u64 = uint64_t;
-using u32 = uint32_t;
-using u16 = uint16_t;
-using u8  = uint8_t;
-
-// To allow replacement of the logger for a more functional one
-#ifndef REPLACE_LOGGER
-#include "Logger.h"
-#endif
 
 // Stores the options for the renderer, which are passed during initialization.
 struct ImGuiVulkanOptions
@@ -42,11 +22,11 @@ struct ImGuiVulkanOptions
 	std::string fragment_shader;  // Fragment shader path. Default path: "../shaders/imgui.frag.spv"
 };
 
-class ImGuiVulkanRenderer
+class ImGuiVulkanRenderer : public ImGuiRenderer
 {
 public:
 	ImGuiVulkanRenderer::~ImGuiVulkanRenderer();
-	bool initialize(void* handle, void* h_instance, ImGuiVulkanOptions options);
+	bool initialize(void* handle, void* instance, void* renderer_options);
 	void new_frame();
 
 	// TODO: These shouldn't probably be public. Maybe use a struct with needed handles for rendering?
@@ -103,21 +83,17 @@ private:
 	VkShaderModule load_shader(const u8* shader, u64 size);
 	bool create_swapchain_image_views();
 
-	// Internal functions for Vulkan
+	// Internal functions for the renderer
 	bool prepare_vulkan(u8 device_num, bool validation_layers);
 	static void imgui_render(ImDrawData* draw_data);
 
 	// Internal values
-	void* window_handle;
-	void* window_instance;
 	bool precompiled_shaders;
 	std::string vertex_shader_path = "../shaders/imgui.vert.spv";
 	std::string fragment_shader_path = "../shaders/imgui.frag.spv";
-	s64 ticks_per_second;
-	s64 time;
 };
 
-const std::vector<u8> imgui_vertex = {
+const std::vector<u8> vulkan_vertex = {
 	0x03, 0x02, 0x23, 0x07, 0x00, 0x00, 0x01, 0x00, 0x01, 0x00, 0x08, 0x00,
 	0x30, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x11, 0x00, 0x02, 0x00,
 	0x01, 0x00, 0x00, 0x00, 0x11, 0x00, 0x02, 0x00, 0x20, 0x00, 0x00, 0x00,
@@ -252,7 +228,7 @@ const std::vector<u8> imgui_vertex = {
 	0x3E, 0x00, 0x03, 0x00, 0x2F, 0x00, 0x00, 0x00, 0x2E, 0x00, 0x00, 0x00,
 	0xFD, 0x00, 0x01, 0x00, 0x38, 0x00, 0x01, 0x00, };
 
-const std::vector<u8> imgui_fragment = {
+const std::vector<u8> vulkan_fragment = {
 	0x03, 0x02, 0x23, 0x07, 0x00, 0x00, 0x01, 0x00, 0x01, 0x00, 0x08, 0x00,
 	0x18, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x11, 0x00, 0x02, 0x00,
 	0x01, 0x00, 0x00, 0x00, 0x0B, 0x00, 0x06, 0x00, 0x01, 0x00, 0x00, 0x00,

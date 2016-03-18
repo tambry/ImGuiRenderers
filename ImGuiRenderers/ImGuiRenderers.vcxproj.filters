@@ -27,5 +27,8 @@
     <ClCompile Include="Logger.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="ImGuiRenderers.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

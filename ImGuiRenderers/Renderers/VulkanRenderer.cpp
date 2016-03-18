@@ -307,41 +307,8 @@ VkBool32 ImGuiVulkanRenderer::debug_callback(VkDebugReportFlagsEXT flags, VkDebu
 
 void ImGuiVulkanRenderer::new_frame()
 {
+	ImGuiRenderer::new_frame();
 	ImGuiIO& io = ImGui::GetIO();
-
-	float width = 0;
-	float height = 0;
-
-	// Get the window width/height depending on the platform and calculate the delta time
-#ifdef _WIN32
-	HWND handle = static_cast<HWND>(window_handle);
-	RECT coordinates;
-
-	if (GetClientRect(handle, &coordinates) == 0)
-	{
-		log(ERROR, "Failed to obtain the size of the window. (%d)", GetLastError());
-		return;
-	}
-
-	width = static_cast<float>(coordinates.right - coordinates.left);
-	height = static_cast<float>(coordinates.bottom - coordinates.top);
-
-	// Delta time calculation
-	s64 current_time;
-	QueryPerformanceCounter((LARGE_INTEGER*)&current_time);
-	io.DeltaTime = (float)(current_time - time) / ticks_per_second;
-	time = current_time;
-
-	// Set the keyboard modifiers
-	io.KeyCtrl = (GetKeyState(VK_CONTROL) & 0x8000) != 0;
-	io.KeyShift = (GetKeyState(VK_SHIFT) & 0x8000) != 0;
-	io.KeyAlt = (GetKeyState(VK_MENU) & 0x8000) != 0;
-
-	// Whether the cursor is being drawn in software
-	SetCursor(io.MouseDrawCursor ? nullptr : LoadCursor(nullptr, IDC_ARROW));
-#else
-	// TODO: Unix implementation
-#endif
 
 	// The swapchain needs to be recreated, when the window is resized or else bad things happen
 	if ((io.DisplaySize.x != width || io.DisplaySize.y != height) && width != 0 && height != 0)
@@ -414,13 +381,6 @@ void ImGuiVulkanRenderer::new_frame()
 		io.DisplaySize.x = width;
 		io.DisplaySize.y = height;
 	}
-
-	// Calculate the delta time (platform-specific)
-#ifdef _WIN32
-
-#else
-	// TODO: Unix version
-#endif
 
 	ImGui::NewFrame();
 }
@@ -1110,8 +1070,8 @@ bool ImGuiVulkanRenderer::prepare_vulkan(u8 device_num, bool validation_layers)
 	// Shaders
 	if (precompiled_shaders)
 	{
-		vertex_shader = load_shader(imgui_vertex.data(), imgui_vertex.size());
-		fragment_shader = load_shader(imgui_fragment.data(), imgui_fragment.size());
+		vertex_shader = load_shader(vulkan_vertex.data(), vulkan_vertex.size());
+		fragment_shader = load_shader(vulkan_fragment.data(), vulkan_fragment.size());
 	}
 	else
 	{
@@ -1322,17 +1282,17 @@ bool ImGuiVulkanRenderer::prepare_vulkan(u8 device_num, bool validation_layers)
 	return true;
 }
 
-bool ImGuiVulkanRenderer::initialize(void* handle, void* instance, ImGuiVulkanOptions options)
+bool ImGuiVulkanRenderer::initialize(void* handle, void* instance, void* renderer_options)
 {
+	ImGuiRenderer::initialize(handle, instance, renderer_options);
+	ImGuiVulkanOptions& options = *(ImGuiVulkanOptions*)renderer_options;
+
 	// Set some basic ImGui info
 	ImGuiIO& io = ImGui::GetIO();
-	io.ImeWindowHandle = handle;
 	io.RenderDrawListsFn = imgui_render;
 	io.UserData = this;
 
 	// Set some internal values
-	window_handle = handle;
-	window_instance = instance;
 	clear_value = options.clear_value;
 	precompiled_shaders = options.use_precompiled_shaders;
 
@@ -1351,11 +1311,6 @@ bool ImGuiVulkanRenderer::initialize(void* handle, void* instance, ImGuiVulkanOp
 		log(ERROR, "Failed to initialize Vulkan renderer.");
 		return false;
 	}
-
-#ifdef _WIN32
-	QueryPerformanceFrequency((LARGE_INTEGER*)&ticks_per_second);
-	QueryPerformanceCounter((LARGE_INTEGER*)&time);
-#endif
 
 	return true;
 }
