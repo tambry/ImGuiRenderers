@@ -25,7 +25,7 @@ struct ImGuiVulkanOptions
 class ImGuiVulkanRenderer : public ImGuiRenderer
 {
 public:
-	ImGuiVulkanRenderer::~ImGuiVulkanRenderer();
+	~ImGuiVulkanRenderer();
 	bool initialize(void* handle, void* instance, void* renderer_options);
 	void new_frame();
 
